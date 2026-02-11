@@ -296,10 +296,24 @@
         }
 
         const trigger = document.getElementById('secret-trigger');
+        let tapCount = 0;
+        let tapTimer;
+
         if (trigger) {
-            trigger.addEventListener('dblclick', (e) => {
+            trigger.addEventListener('click', (e) => {
                 e.preventDefault();
-                triggerUpdate();
+                
+                tapCount++;
+                
+               
+                clearTimeout(tapTimer);
+                tapTimer = setTimeout(() => { tapCount = 0; }, 500);
+
+               
+                if (tapCount === 3) {
+                    tapCount = 0;
+                    triggerUpdate();
+                }
             });
         }
 
