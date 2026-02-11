@@ -183,6 +183,11 @@
             justify-content: center;
             gap: 8px;
             direction: ltr;
+            
+            position: -webkit-sticky;
+            position: sticky;
+            top: 80px;     
+            z-index: 5;
         }
         
         .date-divider i { font-size: 0.85rem; }
@@ -192,10 +197,6 @@
             -webkit-user-select: none;  
             cursor: pointer;             
             touch-action: manipulation;
-            position: -webkit-sticky;
-            position: sticky;
-            top: 80px;     
-            z-index: 5;
         }
         
     </style>
