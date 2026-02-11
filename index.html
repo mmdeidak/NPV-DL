@@ -296,9 +296,12 @@
         }
 
         const trigger = document.getElementById('secret-trigger');
-        trigger.addEventListener('dblclick', () => {
-            triggerUpdate();
-        });
+        if (trigger) {
+            trigger.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                triggerUpdate();
+            });
+        }
 
        
         async function triggerUpdate() {
@@ -320,7 +323,8 @@
                 await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Authorization':      async functio
+                       
+                        'Authorization': `Bearer ${token}`, 
                         'Accept': 'application/vnd.github.v3+json'
                     },
                     body: JSON.stringify({ ref: 'main' })
