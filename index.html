@@ -37,6 +37,7 @@
             justify-content: space-between;
             align-items: center;
             background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-light);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -141,15 +142,15 @@
         .config-time {
             font-size: 0.8rem;
             color: var(--text-sub);
-            font-weight: 400; 
-            background: var(--bg-pill); 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid var(--border-light);
+            font-weight: 400;
             padding: 5px 14px;
             border-radius: 20px;
             z-index: 1;
             display: flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid rgba(255,255,255,0.12);
         }
 
         .config-time i { font-size: 0.75rem; }
@@ -162,11 +163,11 @@
         }
         #loading i { color: var(--accent); }
 
-        .date-divider {
-            background: var(--bg-pill);       
+        .date-divider {     
             opacity: 0.85;
-            color: rgba(255, 255, 255, 0.7);   
-            border: 1px solid rgba(255,255,255,0.12); 
+            color: var(--text-sub);
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid var(--border-light);
             
             font-size: 0.85rem; 
             font-weight: 400;   
