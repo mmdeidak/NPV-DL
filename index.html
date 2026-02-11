@@ -182,16 +182,23 @@
         
         .date-divider i { font-size: 0.85rem; }
         
+        #secret-trigger {
+            user-select: none;          
+            -webkit-user-select: none;  
+            cursor: pointer;             
+            touch-action: manipulation; 
+        }
+        
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="action-container"></div> <span class="header-title">NPV Tunnel</span>
+        <div class="action-container"></div>
         
-        <button class="header-btn" onclick="triggerUpdate()">
-            <i class="fa-solid fa-rotate-right"></i>
-        </button>
+        <span class="header-title" id="secret-trigger">NPV Tunnel</span>
+        
+        <div class="action-container"></div>
     </div>
 
     <div class="container" id="file-list">
@@ -288,31 +295,43 @@
             return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
         }
 
+        const trigger = document.getElementById('secret-trigger');
+        trigger.addEventListener('dblclick', () => {
+            triggerUpdate();
+        });
+
+       
         async function triggerUpdate() {
             const token = prompt("GitHub Token:");
             if (!token) return;
 
+           
+            const container = document.getElementById('file-list');
+            container.innerHTML = `
+                <div id="loading">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                    <br><br>در حال ارسال دستور...
+                </div>
+            `;
+
             const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`;
             
             try {
-                const btnIcon = document.querySelector('.header-btn i');
-                btnIcon.className = "fa-solid fa-spin fa-spinner"; 
-
                 await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization':      async functio
                         'Accept': 'application/vnd.github.v3+json'
                     },
                     body: JSON.stringify({ ref: 'main' })
                 });
                 
                 alert("دستور آپدیت ارسال شد.");
-                btnIcon.className = "fa-solid fa-rotate-right"; 
+                loadFiles();
                 
             } catch (e) {
                 alert("خطا: " + e.message);
-                location.reload();
+                loadFiles();
             }
         }
 
