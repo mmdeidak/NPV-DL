@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NPV Archive</title>
+    
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/misc/Farsi-Digits/font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-app: #101820;       
+            --bg-card: #1c2632;
+            --bg-header: #15202b;
+            --text-main: #e0e0e0;    
+            --text-sub: #b0b8c4;    
+            --accent: #3399ff;       
+            --border-r: 18px;
+            --bg-pill: rgba(44, 62, 80, 0.6);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        .header {
+            padding: 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            height: 80px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .header-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--accent); 
+            font-size: 1.3rem; 
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: auto; 
+            margin-left: 0;
+        }
+
+        .action-container { width: 44px; }
+
+        .header-btn:active {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(180deg);
+        }
+
+        .container {
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-left: 20px;
+            padding-bottom: 5px; 
+            max-width: 500px;
+            margin: 0 auto;
+            overflow: visible !important; 
+        }
+
+        .config-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-r);
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s;
+            border: 1px solid rgba(255,255,255,0.05);
+            height: 130px; 
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+
+        .config-card:active {
+            transform: scale(0.96);
+            background-color: #232e3c;
+            border-color: var(--accent);
+        }
+
+        .bg-icon {
+            position: absolute;
+            left: -10px;
+            bottom: -20px;
+            font-size: 7rem; 
+            color: rgba(255, 255, 255, 0.05); 
+            transform: rotate(-20deg); 
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .config-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 15px; 
+            direction: ltr;
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .config-time {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid var(--border-light);
+            font-weight: 400;
+            padding: 5px 14px;
+            border-radius: 20px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .config-time i { font-size: 0.75rem; }
+
+        #loading {
+            text-align: center;
+            color: var(--text-sub);
+            margin-top: 100px;
+            font-size: 1rem;
+        }
+        #loading i { color: var(--accent); }
+
+        .date-divider {
+            color: var(--text-sub);
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid var(--border-light);
+            
+            font-size: 0.85rem; 
+            font-weight: 400;   
+            padding: 4px 14px;
+            border-radius: 20px;
+            
+            margin: 20px auto 15px auto;
+            width: fit-content;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            direction: ltr;
+        }
+        
+        .date-divider i { font-size: 0.85rem; }
+        
+        #secret-trigger {
+            user-select: none;          
+            -webkit-user-select: none;  
+            cursor: pointer;             
+            touch-action: manipulation;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="action-container"></div>
+        
+        <span class="header-title" id="secret-trigger">NPV Tunnel</span>
+        
+        <div class="action-container"></div>
+    </div>
+
+    <div class="container" id="file-list">
+        <div id="loading">
+            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+            <br><br>در حال دریافت...
+        </div>
+    </div>
+
+    <script>
+        const GITHUB_USERNAME = 'mmdeidak'; 
+        const REPO_NAME = 'NPV-DL';
+        const WORKFLOW_FILE = 'update.yml';
+        const BASE_URL = `https://${GITHUB_USERNAME}.github.io/${REPO_NAME}`;
+        const DATA_URL = `${BASE_URL}/data.json`;
+
+        async function loadFiles() {
+            try {
+                const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
+                if (!response.ok) throw new Error("Database not ready");
+
+                let files = await response.json();
+                files.sort((a, b) => b.timestamp - a.timestamp); 
+                
+                const container = document.getElementById('file-list');
+                document.getElementById('loading').style.display = 'none';
+
+                if (files.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-sub); margin-top:50px;">خالی</p>';
+                    return;
+                }
+
+                let lastDateHeader = ""; 
+
+                files.forEach(file => {
+                    const fullFileUrl = `${BASE_URL}/${file.url}`;
+                    const headerText = getDateHeader(file.timestamp);
+                    
+                    if (headerText !== lastDateHeader) {
+
+                        const headerDiv = document.createElement('div');
+                        headerDiv.className = 'date-divider';
+                        headerDiv.innerHTML = headerText;
+                        
+                        if (lastDateHeader === "") {
+                            headerDiv.style.marginTop = "0px";
+                        }
+                        
+                        container.appendChild(headerDiv);
+                        
+                        lastDateHeader = headerText;
+                    }
+
+                    const card = document.createElement('a');
+                    card.className = 'config-card';
+                    card.href = fullFileUrl;
+                    card.setAttribute('download', ''); 
+
+                    card.innerHTML = `
+                        <i class="fa-solid fa-file-arrow-down bg-icon"></i>
+                        <span class="config-name">${file.name}</span>
+                        <span class="config-time">
+                            ${getTimeOnly(file.timestamp)}
+                        </span>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loading').innerHTML = `<span style="color:#ff3b30; font-size:0.9rem">خطا در دریافت فایل‌ها.</span>`;
+            }
+        }
+
+        function getDateHeader(timestamp) {
+            const date = new Date(timestamp * 1000);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+            if (date.toDateString() === now.toDateString()) return "Today";
+            
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+            if (diffDays < 7) return date.toLocaleDateString('en-US', { weekday: 'long' });
+
+            return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function getTimeOnly(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        const trigger = document.getElementById('secret-trigger');
+        let tapCount = 0;
+        let tapTimer;
+
+        if (trigger) {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                tapCount++;
+                
+               
+                clearTimeout(tapTimer);
+                tapTimer = setTimeout(() => { tapCount = 0; }, 500);
+
+               
+                if (tapCount === 5) {
+                    tapCount = 0;
+                    triggerUpdate();
+                }
+            });
+        }
+
+       
+        async function triggerUpdate() {
+            const token = prompt("GitHub Token:");
+            if (!token) return;
+
+           
+            const container = document.getElementById('file-list');
+            container.innerHTML = `
+                <div id="loading">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                    <br><br>در حال ارسال دستور...
+                </div>
+            `;
+
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`;
+            
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                       
+                        'Authorization': `Bearer ${token}`, 
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({ ref: 'main' })
+                });
+                
+                alert("دستور آپدیت ارسال شد.");
+                loadFiles();
+                
+            } catch (e) {
+                alert("خطا: " + e.message);
+                loadFiles();
+            }
+        }
+
+        loadFiles();
+    </script>
+</body>
+</html>
